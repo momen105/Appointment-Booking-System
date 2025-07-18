@@ -1,0 +1,209 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="card mx-auto shadow p-4 custom-transparent-color position-relative" style="width: 800px;">
+    <h2 class="mb-4 text-center">Join Us – Sign Up Now</h2>
+
+    <form id="registration-form" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-6">
+            <div class="mb-3">
+                <input type="text" class="form-control custom-input" name="full_name" placeholder="Full Name" required>
+            </div>
+            <div class="mb-3">
+                <input type="email" class="form-control custom-input" name="email" placeholder="Email" required>
+            </div>
+            
+            <div class="mb-3">
+                <input type="text" class="form-control custom-input" id="mobile_number" name="mobile_number" placeholder="Mobile Number (+88...)" required>
+                
+            </div>
+            <div class="mb-3">
+            <select name="user_type" class="form-select custom-input" required>
+                <option value="">Select User Type</option>
+                <option value="Admin">Admin</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Patient">Patient</option>
+            </select>
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control custom-input" name="license_no" placeholder="License No (Doctors only)">
+                </div>
+
+                <div class="mb-3 position-relative">
+                    <input type="password" class="form-control custom-input pe-5" id="password" name="password" placeholder="Password" required>
+                    <i class="fa-solid fa-eye position-absolute top-50 end-0 translate-middle-y me-3 text-muted cursor-pointer" id="togglePassword" style="cursor: pointer;"></i>
+                    
+                </div>
+                
+
+
+            </div>
+             <div class="col-6">
+                        
+                <div class="mb-3">
+                    <input type="number" class="form-control custom-input" name="experience_years" placeholder="Experience Years (Doctors only)">
+                </div>
+                <div class="mb-3">
+                    <input type="number" step="0.01" class="form-control custom-input" name="consultation_fee" placeholder="Consultation Fee (Doctors only)">
+                </div>
+
+                <div class="mb-3">
+                    <input type="text" class="form-control custom-input" name="thana" placeholder="Thana">
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control custom-input" name="district" placeholder="District">
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control custom-input" name="division" placeholder="Division">
+                </div>
+                
+                <div class="mb-3  position-relative">
+
+                    <input type="password" class="form-control custom-input" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+                    <i class="fa-solid fa-eye position-absolute top-50 end-0 translate-middle-y me-3 text-muted cursor-pointer" id="toggleConfirmPassword" style="cursor: pointer;"></i>
+                  
+                    
+                </div>
+
+                    </div>   
+                </div>
+
+
+                
+                 <br>
+                <div class="error-div position-absolute">
+                    <small id="mobile-error" class="text-danger d-block"></small>
+                    <small id="confirm-password-error" class="text-danger d-block"></small>
+                    <small id="password-error" class="text-danger d-block"></small>
+                        
+                </div>
+            
+                <br>
+            <div class="text-center">
+                <button type="submit" class="btn custom-button w-50 ">Sign Up</button>
+            </div>
+
+    </form>
+
+    <div id="message" class="mt-3  fw-bold text-center">Already have an account? <a href="{% url 'login' %}" class="login-signin">Login here</a></div>
+</div>
+
+<script>
+document.getElementById('registration-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    try {
+        const response = await fetch('/user/registration/', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            localStorage.setItem('access_token', data.access);
+            localStorage.setItem('refresh_token', data.refresh);
+            window.location.href = '/';
+        } else {
+            let msg = '';
+            for (const key in data) {
+                msg += `${key}: ${data[key]}\n`;
+            }
+            document.getElementById('message').innerText = msg;
+        }
+    } catch (err) {
+        console.error(err);
+        document.getElementById('message').innerText = 'Something went wrong.';
+    }
+});
+
+
+</script>
+
+<script>
+    const mobileInput = document.getElementById('mobile_number');
+    const mobileError = document.getElementById('mobile-error');
+    mobileInput.addEventListener('input', function () {
+        if (!mobileInput.value.startsWith('+88')) {
+            mobileInput.value = '+88';
+        }
+
+        const isValidMobile = /^\+88\d{11}$/.test(mobileInput.value);
+        if (!isValidMobile) {
+            mobileError.textContent = 'Mobile number must be exactly 14 digits and start with +88';
+        } else {
+            mobileError.textContent = '';
+        }
+    });
+
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm_password');
+    const passwordError = document.getElementById('password-error');
+    const confirmPasswordError = document.getElementById('confirm-password-error');
+    const toggleIcon = document.getElementById("togglePassword");
+    const toggleConfirmPasswordIcon = document.getElementById("toggleConfirmPassword");
+    
+    function validatePasswordStrength(password) {
+        const lengthValid = password.length >= 8;
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasDigit = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        return lengthValid && hasUppercase && hasDigit && hasSpecialChar;
+    }
+    
+    passwordInput.addEventListener('input', function () {
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        if (!validatePasswordStrength(password)) {
+            passwordError.textContent = 'Password must be at least 8 characters, include an uppercase letter, a number, and a special character.';
+            return; // prevent submit
+        }else {
+            passwordError.textContent = '';
+        }
+
+       
+       
+    })
+    confirmPasswordInput.addEventListener('input', function () {
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        if (password !== confirmPassword) {
+            confirmPasswordError.textContent = 'Passwords do not match.';
+            return;
+        } else {
+            confirmPasswordError.textContent = '';
+        }
+       
+    })
+
+
+        
+    toggleIcon.addEventListener("click", function () {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+
+        // toggle icon class
+        this.classList.toggle("fa-eye");
+        this.classList.toggle("fa-eye-slash");
+    });
+
+    toggleConfirmPasswordIcon.addEventListener("click", function () {
+        const type = confirmPasswordInput.getAttribute("type") === "password" ? "text" : "password";
+        confirmPasswordInput.setAttribute("type", type);
+
+        // toggle icon class
+        this.classList.toggle("fa-eye");
+        this.classList.toggle("fa-eye-slash");
+    });
+</script>
+
+
+{% endblock %}

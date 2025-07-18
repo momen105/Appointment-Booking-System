@@ -2,13 +2,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
+from django.shortcuts import render, redirect
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import *
 from apps.user.models import *
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
+from django.views import View
 
-class RegisterAPIView(APIView):
+class RegistrationAPIView(APIView):
     permission_classes = [AllowAny]
+
+    def get(self, request):
+        return render(request, 'auth/registration.html')
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -18,7 +23,6 @@ class RegisterAPIView(APIView):
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
-                'user': UserSerializer(user).data
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -63,3 +67,7 @@ class CustomTokenRefreshView(TokenRefreshView):
 
         return Response(response_data, status=status.HTTP_200_OK)
     
+
+class LoginView(View):
+    def get(self, request):
+        return render(request, 'auth/login.html')

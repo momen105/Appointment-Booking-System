@@ -66,7 +66,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         token['phone'] = user.phone
         token['superuser'] = user.is_superuser
-        token['is_staff'] = user.is_staff
         token['is_acitve'] = user.is_active
         return token
     

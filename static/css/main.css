@@ -1,0 +1,26 @@
+.custom-shadow {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+.custom-transparent-color{
+    background-color: #00000021;
+}
+.custom-button{
+    background-color: transparent;
+    border: 1px solid black;
+    color: black;
+
+}
+.custom-button:hover{
+    background-color: rgba(43, 249, 64, 0.393);;
+    border: 1px solid rgba(43, 249, 64, 0.87);;
+    color: white;
+
+}
+.login-signin{
+color: white; font-size: small; text-decoration: none;
+}
+.custom-input{
+    background-color: #ffffffcf;
+    border: 1.5px solid white;
+
+}
