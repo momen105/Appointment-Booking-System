@@ -1,36 +1,74 @@
 
 {% block nav_content %}
 <div id="mySidenav" class="sidenav">
-  <a class="closebtn"  id="closeBtn" onclick="closeNav()"><i class="fa-solid fa-bars"></i></a>
-  <a class="openbtn"  id="openBtn" onclick="openNav()"><i class="fa-solid fa-xmark"></i></a>
-  <a href="#">About</a>
-  <a href="#">Services</a>
-  <a href="#">Clients</a>
-  <a href="#">Contact</a>
+  <div class="d-flex justify-content-between">
+    <div class="p-2 justify-content-center">
+        <p class="title" id="navtitle">Healthcare</p>
+        <a class="openbtn text-center"  id="openBtn" onclick="openNav()"><i class="fa-solid fa-bars"></i></a>
+    </div>
+    <div>
+        <a class="closebtn"  id="closeBtn" onclick="closeNav()"><i class="fa-solid fa-bars"></i></a>
+    </div>
+  </div>
+  <!-- Navigation Links Section -->
+  <div class="nav-links mt-3">
+    <a href="#"><i class="fa-solid fa-house me-2"></i> <span class="nav-link-name">Home</span></a>
+    <a href="#"><i class="fa-solid fa-user me-2"></i> <span class="nav-link-name">Doctors</span> </a>
+    <a href="#"><i class="fa-solid fa-briefcase me-2"></i><span class="nav-link-name"> Appointment</span></a>
+    <a href="#"><i class="fa-solid fa-users me-2"></i> <span class="nav-link-name">Report</span></a>
+  </div>
+
+  <!-- Bottom Icon Section -->
+  <div class="bottom-icons mt-auto p-2">
+    <hr />
+    <a href="#"><i class="fa-solid fa-gear me-2"></i> <span class="nav-link-name">Settings</span></a>
+    <a href="#"><i class="fa-solid fa-right-from-bracket me-2"></i> <span class="nav-link-name">Logout</span></a>
+  </div>
 </div>
 {% endblock %}
 {% block scripts %}
 <script>
     function openNav() {
-        document.getElementById("mySidenav").style.width = "250px";
-        document.getElementById("main").style.marginLeft = "250px";
+        document.getElementById("mySidenav").style.width = "255px";
+        document.getElementById("main").style.marginLeft = "255px";
 
         document.getElementById("openBtn").style.display = "none";
         document.getElementById("closeBtn").style.display = "block";
+        document.getElementById("navtitle").style.fontSize = "30px";
+        document.getElementById("navtitle").style.fontWeight = "bold";
+        document.getElementById("navtitle").style.marginBottom = "0px";
 
+        // Align left and show names
+        document.querySelector(".nav-links").style.textAlign = "left";
+        document.querySelector(".bottom-icons").style.textAlign = "left";
+        const navNames = document.getElementsByClassName("nav-link-name");
+        for (let i = 0; i < navNames.length; i++) {
+            navNames[i].style.display = "inline"; // ✅ Show text
         }
+    }
 
     function closeNav() {
         document.getElementById("mySidenav").style.width = "100px";
-        document.getElementById("main").style.marginLeft= "100px";
+        document.getElementById("main").style.marginLeft = "100px";
+
         document.getElementById("openBtn").style.display = "block";
+        document.getElementById("openBtn").style.fontSize = "30px";
         document.getElementById("closeBtn").style.display = "none";
+        document.getElementById("navtitle").style.fontSize = "16px";
+        document.getElementById("navtitle").style.fontWeight = "bold";
+
+        // Center align and hide names
+        document.querySelector(".nav-links").style.textAlign = "center";
+        document.querySelector(".bottom-icons").style.textAlign = "center";
+        const navNames = document.getElementsByClassName("nav-link-name");
+        for (let i = 0; i < navNames.length; i++) {
+            navNames[i].style.display = "none"; // ✅ Hide text
         }
+    }
 
-window.onload = function() {
-    openNav();
-};
+    window.onload = function () {
+        openNav(); // Optional default open
+    };
 </script>
-
 
 {% endblock %}
